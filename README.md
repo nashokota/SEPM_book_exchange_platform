@@ -90,3 +90,18 @@ register: http://localhost:9090/register
 dashboard: http://localhost:9090/dashboard
 admin: http://localhost:9090/admin
 
+## CI workflow
+
+GitHub Actions is configured to run the Maven build and tests on:
+- pull requests to `develop`
+- pull requests to `main`
+- pushes to `develop`
+- pushes to `main`
+
+Current CI job:
+- `build-and-test`
+
+This workflow uses:
+- Java 17
+- Maven wrapper (`./mvnw`)
+- dependency caching for Maven
