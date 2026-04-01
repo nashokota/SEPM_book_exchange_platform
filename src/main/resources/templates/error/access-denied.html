@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+   <meta charset="UTF-8">
+   <title>Access Denied - Book Exchange Platform</title>
+   <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<div class="container">
+   <h1>Access Denied</h1>
+   <p>You are logged in, but your account does not have permission to open this page.</p>
+
+   <div class="actions">
+       <a class="btn btn-secondary" th:href="@{/dashboard}">Back to Dashboard</a>
+       <a class="btn btn-link" th:href="@{/}">Home</a>
+   </div>
+</div>
+</body>
+</html>

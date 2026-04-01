@@ -12,4 +12,9 @@ public class HomeController {
        model.addAttribute("appName", "Book Exchange Platform");
        return "home";
    }
+
+   @GetMapping("/access-denied")
+   public String accessDenied() {
+       return "error/access-denied";
+   }
 }

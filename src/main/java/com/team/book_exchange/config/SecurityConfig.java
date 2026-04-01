@@ -1,5 +1,7 @@
 package com.team.book_exchange.config;
 
+import com.team.book_exchange.security.CustomUserDetailsService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -10,15 +12,33 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableMethodSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+   private final CustomUserDetailsService customUserDetailsService;
 
    @Bean
    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
        http
                .authorizeHttpRequests(auth -> auth
-                       .requestMatchers("/", "/css/**", "/js/**", "/images/**").permitAll()
-                       .anyRequest().permitAll()
-               );
+                       .requestMatchers("/", "/login", "/register", "/access-denied", "/css/**", "/js/**", "/images/**").permitAll()
+                       .requestMatchers("/admin/**").hasRole("ADMIN")
+                       .requestMatchers("/dashboard/**").authenticated()
+                       .anyRequest().authenticated()
+               )
+               .formLogin(form -> form
+                       .loginPage("/login")
+                       .defaultSuccessUrl("/dashboard", true)
+                       .permitAll()
+               )
+               .logout(logout -> logout
+                       .logoutSuccessUrl("/login?logout")
+                       .permitAll()
+               )
+               .exceptionHandling(exception -> exception
+                       .accessDeniedPage("/access-denied")
+               )
+               .userDetailsService(customUserDetailsService);
 
        return http.build();
    }

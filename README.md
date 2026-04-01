@@ -45,17 +45,48 @@ A full-stack web application where users can browse books, request exchanges or 
 - all features use feature branches
 - changes go through pull requests with review
 
-## Current domain foundation
+## Current implementation status
 Implemented so far:
-- `User` entity
-- `Role` entity
-- `SellerApplication` entity
-- `user_roles` join table
-- automatic seeding for roles
-- automatic seeding for one admin user
+- Spring Boot project bootstrap
+- PostgreSQL running in Docker for local development
+- `User`, `Role`, and `SellerApplication` entities
+- automatic seeding for roles and one admin user
+- buyer registration
+- login/logout
+- authenticated dashboard
+- admin-only protected page
+- initial service unit tests
+
+## Seeded admin account
+This account is created automatically on first startup if it does not already exist.
+
+Default local values:
+- email: `admin@bookexchange.local`
+- password: `Admin@12345`
 
 ## Local development bootstrap
 
 ### Start PostgreSQL in Docker
 ```bash
 docker compose up -d postgres
+Run the Spring Boot app
+On Debian / Git Bash:
+./mvnw spring-boot:run
+On Windows CMD:
+mvnw.cmd spring-boot:run
+On Windows PowerShell:
+.\mvnw.cmd spring-boot:run
+Run tests
+On Debian / Git Bash:
+./mvnw test
+On Windows CMD:
+mvnw.cmd test
+On Windows PowerShell:
+.\mvnw.cmd test
+Current local URLs
+home: http://localhost:9090/
+login: http://localhost:9090/login
+register: http://localhost:9090/register
+dashboard: http://localhost:9090/dashboard
+admin: http://localhost:9090/admin
+
