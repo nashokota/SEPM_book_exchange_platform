@@ -1,0 +1,20 @@
+services:
+ postgres:
+   image: postgres:16-alpine
+   container_name: book_exchange-postgres
+   environment:
+     POSTGRES_DB: ${DB_NAME:-book_exchange_db}
+     POSTGRES_USER: ${DB_USER:-book_exchange_user}
+     POSTGRES_PASSWORD: ${DB_PASSWORD:-book_exchange_pass}
+   ports:
+     - "5433:5432"
+   volumes:
+     - postgres_data:/var/lib/postgresql/data
+   healthcheck:
+     test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-book_exchange_user} -d ${DB_NAME:-book_exchange_db}"]
+     interval: 10s
+     timeout: 5s
+     retries: 5
+
+volumes:
+ postgres_data:
