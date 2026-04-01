@@ -45,5 +45,8 @@ A full-stack web application where users can browse books, request exchanges or 
 - all features use feature branches
 - changes go through pull requests with review
 
-## Project status
-Repository initialized. Implementation starts next.
+## Local development bootstrap
+
+### Start PostgreSQL in Docker
+```bash
+docker compose up -d postgres
