@@ -45,6 +45,15 @@ A full-stack web application where users can browse books, request exchanges or 
 - all features use feature branches
 - changes go through pull requests with review
 
+## Current domain foundation
+Implemented so far:
+- `User` entity
+- `Role` entity
+- `SellerApplication` entity
+- `user_roles` join table
+- automatic seeding for roles
+- automatic seeding for one admin user
+
 ## Local development bootstrap
 
 ### Start PostgreSQL in Docker
