@@ -10,16 +10,16 @@ import java.util.List;
 @Controller
 public class DashboardController {
 
-   @GetMapping("/dashboard")
-   public String dashboard(Authentication authentication, Model model) {
-       List<String> roles = authentication.getAuthorities().stream()
-               .map(authority -> authority.getAuthority())
-               .sorted()
-               .toList();
+    @GetMapping("/dashboard")
+    public String dashboard(Authentication authentication, Model model) {
+        List<String> roles = authentication.getAuthorities().stream()
+                .map(authority -> authority.getAuthority())
+                .sorted()
+                .toList();
 
-       model.addAttribute("currentUserEmail", authentication.getName());
-       model.addAttribute("roles", roles);
+        model.addAttribute("currentUserEmail", authentication.getName());
+        model.addAttribute("roles", roles);
 
-       return "dashboard";
-   }
+        return "dashboard";
+    }
 }

@@ -55,7 +55,19 @@ Implemented so far:
 - login/logout
 - authenticated dashboard
 - admin-only protected page
+- seller application submission
+- admin approval/rejection for seller applications
 - initial service unit tests
+
+## Current local URLs
+- home: `http://localhost:9090/`
+- login: `http://localhost:9090/login`
+- register: `http://localhost:9090/register`
+- dashboard: `http://localhost:9090/dashboard`
+- admin: `http://localhost:9090/admin`
+- apply seller: `http://localhost:9090/seller-applications/apply`
+- my seller applications: `http://localhost:9090/seller-applications/mine`
+- admin seller approvals: `http://localhost:9090/admin/seller-applications`
 
 ## Seeded admin account
 This account is created automatically on first startup if it does not already exist.
@@ -69,27 +81,7 @@ Default local values:
 ### Start PostgreSQL in Docker
 ```bash
 docker compose up -d postgres
-Run the Spring Boot app
-On Debian / Git Bash:
-./mvnw spring-boot:run
-On Windows CMD:
-mvnw.cmd spring-boot:run
-On Windows PowerShell:
-.\mvnw.cmd spring-boot:run
-Run tests
-On Debian / Git Bash:
-./mvnw test
-On Windows CMD:
-mvnw.cmd test
-On Windows PowerShell:
-.\mvnw.cmd test
-Current local URLs
-home: http://localhost:9090/
-login: http://localhost:9090/login
-register: http://localhost:9090/register
-dashboard: http://localhost:9090/dashboard
-admin: http://localhost:9090/admin
-
+```
 ## CI workflow
 
 GitHub Actions is configured to run the Maven build and tests on:
