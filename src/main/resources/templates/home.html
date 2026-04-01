@@ -8,8 +8,19 @@
 <body>
 <div class="container">
    <h1 th:text="${appName}">Book Exchange Platform</h1>
-   <p>Spring Boot, Thymeleaf, Spring Security, and PostgreSQL are now wired together.</p>
-   <p>This is the bootstrap page. Real features start next.</p>
+   <p>This milestone adds buyer registration, login, logout, and basic role-based access control.</p>
+
+   <div class="actions">
+       <a class="btn" th:href="@{/register}">Create Buyer Account</a>
+       <a class="btn btn-secondary" th:href="@{/login}">Login</a>
+       <a class="btn btn-link" th:href="@{/dashboard}">Open Dashboard</a>
+   </div>
+
+   <div class="info-box">
+       <h2>Local Admin Seed</h2>
+       <p><strong>Email:</strong> admin@bookexchange.local</p>
+       <p><strong>Password:</strong> Admin@12345</p>
+   </div>
 </div>
 </body>
 </html>
