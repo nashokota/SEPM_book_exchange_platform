@@ -149,3 +149,33 @@ Global REST error handling:
 - `GET /api/seller/requests`
 - `PATCH /api/seller/requests/{id}/approve`
 - `PATCH /api/seller/requests/{id}/reject`
+
+## Testing status
+
+### Unit tests
+Service-layer unit tests are implemented for:
+- authentication
+- seller application flow
+- category management
+- book management
+- request flow
+
+### Integration tests
+MockMvc integration tests are implemented for:
+- public book REST controller
+- admin category REST controller
+- buyer request REST controller
+- seller request approval REST controller
+
+### Repository tests
+JPA repository tests are implemented for:
+- category repository
+- book repository
+
+### Current testing tools
+- JUnit 5
+- Mockito
+- Spring Boot Test
+- MockMvc
+- DataJpaTest
+- H2 test database
