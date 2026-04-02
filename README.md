@@ -49,7 +49,7 @@ A full-stack web application where users can browse books, request exchanges or 
 Implemented so far:
 - Spring Boot project bootstrap
 - PostgreSQL running in Docker for local development
-- `User`, `Role`, `SellerApplication`, `Category`, and `Book` entities
+- `User`, `Role`, `SellerApplication`, `Category`, `Book`, and `ExchangeRequest` entities
 - automatic seeding for roles and one admin user
 - buyer registration
 - login/logout
@@ -64,16 +64,19 @@ Implemented so far:
 - public book search by title/author
 - public category filter
 - public book pagination
+- buyer request submission
+- seller request approval/rejection flow
+- buyer request history
 - initial service unit tests
 
 
 ## Current local URLs
 - home: `http://localhost:9090/`
 - browse books: `http://localhost:9090/books`
-- browse books with search: `http://localhost:9090/books?q=clean`
-- browse books with category: `http://localhost:9090/books?categoryId=1`
-- browse books with pagination: `http://localhost:9090/books?page=1`
 - book details: `http://localhost:9090/books/{id}`
+- create request: `http://localhost:9090/requests/create?bookId={id}`
+- my requests: `http://localhost:9090/requests/my`
+- incoming seller requests: `http://localhost:9090/seller/requests`
 - login: `http://localhost:9090/login`
 - register: `http://localhost:9090/register`
 - dashboard: `http://localhost:9090/dashboard`
@@ -83,7 +86,6 @@ Implemented so far:
 - admin seller approvals: `http://localhost:9090/admin/seller-applications`
 - admin categories: `http://localhost:9090/admin/categories`
 - seller books: `http://localhost:9090/seller/books`
-
 
 ## Seeded admin account
 This account is created automatically on first startup if it does not already exist.

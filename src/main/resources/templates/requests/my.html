@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My Requests - Book Exchange Platform</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<div class="container">
+    <h1>My Book Requests</h1>
+
+    <div class="message message-success" th:if="${successMessage}" th:text="${successMessage}"></div>
+    <div class="message message-error" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+
+    <div class="actions">
+        <a class="btn btn-secondary" th:href="@{/dashboard}">Back to Dashboard</a>
+        <a class="btn btn-link" th:href="@{/books}">Browse Books</a>
+    </div>
+
+    <div th:if="${#lists.isEmpty(requests)}" class="info-box">
+        <p>You have not submitted any requests yet.</p>
+    </div>
+
+    <table th:if="${!#lists.isEmpty(requests)}" class="data-table">
+        <thead>
+        <tr>
+            <th>Book</th>
+            <th>Seller</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Offered Book</th>
+            <th>Submitted</th>
+            <th>Seller Remarks</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="requestItem : ${requests}">
+            <td th:text="${requestItem.book.title}">Clean Code</td>
+            <td th:text="${requestItem.seller.fullName}">Seller One</td>
+            <td th:text="${requestItem.requestType}">BUY</td>
+            <td th:text="${requestItem.status}">PENDING</td>
+            <td th:text="${requestItem.offeredBookTitle != null ? requestItem.offeredBookTitle : '-'}">Book X</td>
+            <td th:text="${requestItem.createdAt}">2026-04-02T12:00</td>
+            <td th:text="${requestItem.sellerResponseRemarks != null ? requestItem.sellerResponseRemarks : '-'}">Looks good</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

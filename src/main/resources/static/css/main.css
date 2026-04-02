@@ -196,3 +196,15 @@ textarea {
 .table-actions form {
     margin: 0;
 }
+
+.pagination {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 24px;
+}
+
+.page-info {
+    font-size: 14px;
+}
