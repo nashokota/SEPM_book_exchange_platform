@@ -61,12 +61,18 @@ Implemented so far:
 - seller book listing management foundation
 - public book browsing
 - public book details page
+- public book search by title/author
+- public category filter
+- public book pagination
 - initial service unit tests
 
 
 ## Current local URLs
 - home: `http://localhost:9090/`
 - browse books: `http://localhost:9090/books`
+- browse books with search: `http://localhost:9090/books?q=clean`
+- browse books with category: `http://localhost:9090/books?categoryId=1`
+- browse books with pagination: `http://localhost:9090/books?page=1`
 - book details: `http://localhost:9090/books/{id}`
 - login: `http://localhost:9090/login`
 - register: `http://localhost:9090/register`
