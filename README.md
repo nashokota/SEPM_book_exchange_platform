@@ -115,3 +115,37 @@ This workflow uses:
 - Java 17
 - Maven wrapper (`./mvnw`)
 - dependency caching for Maven
+
+## REST API foundation
+
+Implemented REST controllers:
+- `BookRestController`
+- `CategoryRestController`
+- `ExchangeRequestRestController`
+
+Global REST error handling:
+- `GlobalRestExceptionHandler`
+
+### Example API endpoints
+
+#### Books
+- `GET /api/books`
+- `GET /api/books/{id}`
+- `GET /api/seller/books`
+- `POST /api/books`
+- `PUT /api/books/{id}`
+- `DELETE /api/books/{id}`
+
+#### Categories
+- `GET /api/categories`
+- `GET /api/categories/{id}`
+- `POST /api/categories`
+- `PUT /api/categories/{id}`
+- `DELETE /api/categories/{id}`
+
+#### Requests
+- `POST /api/requests`
+- `GET /api/requests/my`
+- `GET /api/seller/requests`
+- `PATCH /api/seller/requests/{id}/approve`
+- `PATCH /api/seller/requests/{id}/reject`
