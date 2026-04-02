@@ -49,7 +49,7 @@ A full-stack web application where users can browse books, request exchanges or 
 Implemented so far:
 - Spring Boot project bootstrap
 - PostgreSQL running in Docker for local development
-- `User`, `Role`, and `SellerApplication` entities
+- `User`, `Role`, `SellerApplication`, and `Category` entities
 - automatic seeding for roles and one admin user
 - buyer registration
 - login/logout
@@ -57,7 +57,9 @@ Implemented so far:
 - admin-only protected page
 - seller application submission
 - admin approval/rejection for seller applications
+- admin category management
 - initial service unit tests
+
 
 ## Current local URLs
 - home: `http://localhost:9090/`
@@ -68,6 +70,7 @@ Implemented so far:
 - apply seller: `http://localhost:9090/seller-applications/apply`
 - my seller applications: `http://localhost:9090/seller-applications/mine`
 - admin seller approvals: `http://localhost:9090/admin/seller-applications`
+- admin categories: `http://localhost:9090/admin/categories`
 
 ## Seeded admin account
 This account is created automatically on first startup if it does not already exist.
