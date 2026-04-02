@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+   <meta charset="UTF-8">
+   <title>Browse Books - Book Exchange Platform</title>
+   <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<div class="container">
+   <h1>Available Books</h1>
+
+   <div class="actions">
+       <a class="btn btn-secondary" th:href="@{/}">Home</a>
+       <a class="btn btn-link" th:href="@{/login}">Login</a>
+       <a class="btn" th:href="@{/register}">Register</a>
+   </div>
+
+   <div th:if="${#lists.isEmpty(books)}" class="info-box">
+       <p>No available books have been listed yet.</p>
+   </div>
+
+   <table th:if="${!#lists.isEmpty(books)}" class="data-table">
+       <thead>
+       <tr>
+           <th>Title</th>
+           <th>Author</th>
+           <th>Category</th>
+           <th>Mode</th>
+           <th>Price</th>
+           <th>Seller</th>
+           <th>Actions</th>
+       </tr>
+       </thead>
+       <tbody>
+       <tr th:each="book : ${books}">
+           <td th:text="${book.title}">Clean Code</td>
+           <td th:text="${book.author}">Robert C. Martin</td>
+           <td th:text="${book.category.name}">Programming</td>
+           <td th:text="${book.listingMode}">SELL_ONLY</td>
+           <td th:text="${book.price != null ? book.price : '-'}">500.00</td>
+           <td th:text="${book.seller.fullName}">Seller One</td>
+           <td>
+               <a class="btn btn-link btn-small" th:href="@{/books/{id}(id=${book.id})}">View Details</a>
+           </td>
+       </tr>
+       </tbody>
+   </table>
+</div>
+</body>
+</html>
