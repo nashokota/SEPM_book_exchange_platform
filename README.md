@@ -149,3 +149,18 @@ Global REST error handling:
 - `GET /api/seller/requests`
 - `PATCH /api/seller/requests/{id}/approve`
 - `PATCH /api/seller/requests/{id}/reject`
+
+## Testing status
+
+### Unit tests
+Service-layer unit tests are implemented for:
+- authentication
+- seller application flow
+- category management
+- book management
+- request flow
+
+### Repository tests
+JPA repository tests are implemented for:
+- category repository
+- book repository
