@@ -27,6 +27,12 @@
 
         <a class="btn btn-link" th:href="@{/seller-applications/mine}">My Seller Applications</a>
 
+        <a class="btn"
+           th:if="${#lists.contains(roles, 'ROLE_SELLER')}"
+           th:href="@{/seller/books}">
+            Manage My Book Listings
+        </a>
+
         <a class="btn btn-link"
            th:if="${#lists.contains(roles, 'ROLE_ADMIN')}"
            th:href="@{/admin}">
