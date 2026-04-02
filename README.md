@@ -59,10 +59,15 @@ Implemented so far:
 - admin approval/rejection for seller applications
 - admin category management
 - seller book listing management foundation
+- public book browsing
+- public book details page
 - initial service unit tests
+
 
 ## Current local URLs
 - home: `http://localhost:9090/`
+- browse books: `http://localhost:9090/books`
+- book details: `http://localhost:9090/books/{id}`
 - login: `http://localhost:9090/login`
 - register: `http://localhost:9090/register`
 - dashboard: `http://localhost:9090/dashboard`
@@ -72,6 +77,7 @@ Implemented so far:
 - admin seller approvals: `http://localhost:9090/admin/seller-applications`
 - admin categories: `http://localhost:9090/admin/categories`
 - seller books: `http://localhost:9090/seller/books`
+
 
 ## Seeded admin account
 This account is created automatically on first startup if it does not already exist.

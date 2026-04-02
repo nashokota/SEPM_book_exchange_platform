@@ -2,24 +2,23 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
    <meta charset="UTF-8">
-   <title th:text="${appName}">Book Exchange Platform</title>
+   <title>Book Exchange Platform</title>
    <link rel="stylesheet" th:href="@{/css/main.css}">
 </head>
 <body>
 <div class="container">
-   <h1 th:text="${appName}">Book Exchange Platform</h1>
-   <p>This milestone adds buyer registration, login, logout, and basic role-based access control.</p>
+   <h1>Book Exchange Platform</h1>
+   <p>This platform lets buyers browse books and lets approved sellers create listings.</p>
 
    <div class="actions">
-       <a class="btn" th:href="@{/register}">Create Buyer Account</a>
-       <a class="btn btn-secondary" th:href="@{/login}">Login</a>
-       <a class="btn btn-link" th:href="@{/dashboard}">Open Dashboard</a>
+       <a class="btn" th:href="@{/books}">Browse Available Books</a>
+       <a class="btn btn-secondary" th:href="@{/register}">Create Buyer Account</a>
+       <a class="btn btn-link" th:href="@{/login}">Login</a>
    </div>
 
    <div class="info-box">
-       <h2>Local Admin Seed</h2>
-       <p><strong>Email:</strong> admin@bookexchange.local</p>
-       <p><strong>Password:</strong> Admin@12345</p>
+       <h2>Current milestone</h2>
+       <p>Public browsing is now available for guest users. Search, filters, pagination, and request flow will come next.</p>
    </div>
 </div>
 </body>
