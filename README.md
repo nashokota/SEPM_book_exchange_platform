@@ -196,3 +196,35 @@ Stop containers
 docker compose down
 Stop containers and remove database volume
 docker compose down -v
+```
+
+## Deployment on Render
+
+The application is deployed on Render as a Docker-based web service.
+
+### CI/CD flow
+- GitHub Actions runs service/unit tests first
+- if those pass, GitHub Actions runs repository and integration tests
+- if code is pushed to `main` and both test stages pass, GitHub Actions triggers a Render deploy hook
+- Render rebuilds and redeploys the application
+
+### Render services
+- Render Web Service for the Spring Boot application
+- Render PostgreSQL database for production data
+
+### Required Render environment variables
+Set these in the Render web service:
+- `DB_HOST`
+- `DB_PORT`
+- `DB_NAME`
+- `DB_USER`
+- `DB_PASSWORD`
+- `ADMIN_FULL_NAME`
+- `ADMIN_EMAIL`
+- `ADMIN_PASSWORD`
+
+The application also supports Render’s injected `PORT` variable automatically.
+
+### Public URL
+- Add the deployed Render URL here after first successful deployment.
+
