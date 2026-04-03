@@ -1,20 +1,42 @@
 services:
  postgres:
    image: postgres:16-alpine
-   container_name: book_exchange-postgres
+   container_name: bookexchange-postgres
    environment:
-     POSTGRES_DB: ${DB_NAME:-book_exchange_db}
-     POSTGRES_USER: ${DB_USER:-book_exchange_user}
-     POSTGRES_PASSWORD: ${DB_PASSWORD:-book_exchange_pass}
+     POSTGRES_DB: ${DB_NAME:-bookexchange_db}
+     POSTGRES_USER: ${DB_USER:-bookexchange_user}
+     POSTGRES_PASSWORD: ${DB_PASSWORD:-bookexchange_pass}
    ports:
      - "5433:5432"
    volumes:
      - postgres_data:/var/lib/postgresql/data
    healthcheck:
-     test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-book_exchange_user} -d ${DB_NAME:-book_exchange_db}"]
+     test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-bookexchange_user} -d ${DB_NAME:-bookexchange_db}"]
      interval: 10s
      timeout: 5s
      retries: 5
+
+ app:
+   build:
+     context: .
+     dockerfile: Dockerfile
+   container_name: bookexchange-app
+   depends_on:
+     postgres:
+       condition: service_healthy
+   environment:
+     DB_HOST: postgres
+     DB_PORT: 5432
+     DB_NAME: ${DB_NAME:-bookexchange_db}
+     DB_USER: ${DB_USER:-bookexchange_user}
+     DB_PASSWORD: ${DB_PASSWORD:-bookexchange_pass}
+     SERVER_PORT: 9090
+     ADMIN_FULL_NAME: ${ADMIN_FULL_NAME:-System Administrator}
+     ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@bookexchange.local}
+     ADMIN_PASSWORD: ${ADMIN_PASSWORD:-Admin@12345}
+   ports:
+     - "9090:9090"
+   restart: unless-stopped
 
 volumes:
  postgres_data:

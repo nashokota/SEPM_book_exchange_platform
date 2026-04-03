@@ -179,3 +179,20 @@ JPA repository tests are implemented for:
 - MockMvc
 - DataJpaTest
 - H2 test database
+
+## Dockerized run
+
+The project supports running the full application stack with Docker Compose.
+
+### Build and start app + PostgreSQL
+```bash
+docker compose up --build
+
+Run in background
+
+docker compose up --build -d
+
+Stop containers
+docker compose down
+Stop containers and remove database volume
+docker compose down -v
