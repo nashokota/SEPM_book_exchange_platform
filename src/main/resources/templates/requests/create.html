@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Request - Book Exchange Platform</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<div class="container form-container">
+    <h1>Create Request</h1>
+
+    <div class="info-box" th:if="${book != null}">
+        <p><strong>Book:</strong> <span th:text="${book.title}">Book Title</span></p>
+        <p><strong>Author:</strong> <span th:text="${book.author}">Author</span></p>
+        <p><strong>Seller:</strong> <span th:text="${book.seller.fullName}">Seller</span></p>
+        <p><strong>Mode:</strong> <span th:text="${book.listingMode}">SELL_ONLY</span></p>
+        <p><strong>Price:</strong> <span th:text="${book.price != null ? book.price : '-'}">500.00</span></p>
+    </div>
+
+    <div class="message message-error"
+         th:if="${#fields.hasGlobalErrors()}"
+         th:each="err : ${#fields.globalErrors()}"
+         th:text="${err}">
+    </div>
+
+    <form th:action="@{/requests/create}" th:object="${exchangeRequestRequest}" method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+        <input type="hidden" th:field="*{bookId}">
+
+        <div class="form-group">
+            <label for="requestType">Request type</label>
+            <select id="requestType" th:field="*{requestType}">
+                <option value="">-- Select request type --</option>
+                <option value="BUY">BUY</option>
+                <option value="EXCHANGE">EXCHANGE</option>
+            </select>
+            <div class="field-error" th:if="${#fields.hasErrors('requestType')}" th:errors="*{requestType}"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="offeredBookTitle">Offered book title (required for EXCHANGE)</label>
+            <input id="offeredBookTitle" type="text" th:field="*{offeredBookTitle}">
+            <div class="field-error" th:if="${#fields.hasErrors('offeredBookTitle')}" th:errors="*{offeredBookTitle}"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="offeredBookDetails">Offered book details (optional)</label>
+            <textarea id="offeredBookDetails" th:field="*{offeredBookDetails}" rows="4"></textarea>
+            <div class="field-error" th:if="${#fields.hasErrors('offeredBookDetails')}" th:errors="*{offeredBookDetails}"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="message">Message to seller (optional)</label>
+            <textarea id="message" th:field="*{message}" rows="4"></textarea>
+            <div class="field-error" th:if="${#fields.hasErrors('message')}" th:errors="*{message}"></div>
+        </div>
+
+        <div class="actions">
+            <button class="btn" type="submit">Submit Request</button>
+            <a class="btn btn-secondary" th:href="@{/books/{id}(id=${book.id})}">Cancel</a>
+        </div>
+    </form>
+</div>
+</body>
+</html>

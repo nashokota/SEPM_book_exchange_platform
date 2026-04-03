@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${book.title} + ' - Book Exchange Platform'">Book Details</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<div class="container">
+    <h1 th:text="${book.title}">Book Title</h1>
+
+    <div class="info-box">
+        <p><strong>Author:</strong> <span th:text="${book.author}">Author Name</span></p>
+        <p><strong>Category:</strong> <span th:text="${book.category.name}">Programming</span></p>
+        <p><strong>Condition:</strong> <span th:text="${book.condition}">GOOD</span></p>
+        <p><strong>Listing mode:</strong> <span th:text="${book.listingMode}">SELL_ONLY</span></p>
+        <p><strong>Availability:</strong> <span th:text="${book.availabilityStatus}">AVAILABLE</span></p>
+        <p><strong>Price:</strong> <span th:text="${book.price != null ? book.price : '-'}">500.00</span></p>
+        <p><strong>Seller:</strong> <span th:text="${book.seller.fullName}">Seller One</span></p>
+        <p th:if="${book.isbn != null}"><strong>ISBN:</strong> <span th:text="${book.isbn}">1234567890</span></p>
+        <p th:if="${book.exchangePreference != null}">
+            <strong>Exchange preference:</strong>
+            <span th:text="${book.exchangePreference}">Looking for database books</span>
+        </p>
+        <p th:if="${book.imageUrl != null}">
+            <strong>Image URL:</strong>
+            <span th:text="${book.imageUrl}">https://example.com/image.jpg</span>
+        </p>
+        <p th:if="${book.description != null}">
+            <strong>Description:</strong>
+            <span th:text="${book.description}">Book description</span>
+        </p>
+    </div>
+
+    <div class="actions">
+        <a class="btn" th:href="@{/requests/create(bookId=${book.id})}">Request This Book</a>
+        <a class="btn btn-secondary" th:href="@{/books}">Back to Browse</a>
+        <a class="btn btn-link" th:href="@{/login}">Login</a>
+        <a class="btn" th:href="@{/register}">Register</a>
+    </div>
+</div>
+</body>
+</html>

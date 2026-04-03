@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My Seller Applications - Book Exchange Platform</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<div class="container">
+    <h1>My Seller Applications</h1>
+
+    <div class="message message-success" th:if="${successMessage}" th:text="${successMessage}"></div>
+    <div class="message message-error" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+
+    <div class="actions">
+        <a class="btn"
+           th:if="${canApply}"
+           th:href="@{/seller-applications/apply}">
+            Submit New Seller Application
+        </a>
+        <a class="btn btn-secondary" th:href="@{/dashboard}">Back to Dashboard</a>
+        <a class="btn btn-link" th:href="@{/}">Home</a>
+    </div>
+
+    <div th:if="${#lists.isEmpty(applications)}" class="info-box">
+        <p>You have not submitted any seller applications yet.</p>
+    </div>
+
+    <div th:each="_application : ${applications}" class="application-card">
+        <h2>
+            Seller Application
+            <span class="badge"
+                  th:classappend="| badge-${#strings.toLowerCase(_application.status.name())}|"
+                  th:text="${_application.status}">
+                PENDING
+            </span>
+        </h2>
+
+        <p><strong>Pickup location:</strong> <span th:text="${_application.pickupLocation}">Khulna</span></p>
+        <p><strong>Reason:</strong> <span th:text="${_application.reason}">I want to sell books.</span></p>
+        <p><strong>Submitted at:</strong> <span th:text="${_application.createdAt}">2026-04-02T12:00</span></p>
+
+        <p th:if="${_application.adminRemarks != null}">
+            <strong>Admin remarks:</strong>
+            <span th:text="${_application.adminRemarks}">Looks good.</span>
+        </p>
+    </div>
+</div>
+</body>
+</html>

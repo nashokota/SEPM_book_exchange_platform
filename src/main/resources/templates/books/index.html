@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Browse Books - Book Exchange Platform</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<div class="container">
+    <h1>Available Books</h1>
+
+    <div class="actions">
+        <a class="btn btn-secondary" th:href="@{/}">Home</a>
+        <a class="btn btn-link" th:href="@{/login}">Login</a>
+        <a class="btn" th:href="@{/register}">Register</a>
+    </div>
+
+    <div class="info-box">
+        <h2>Search and Filter</h2>
+
+        <form th:action="@{/books}" method="get">
+            <div class="form-group">
+                <label for="q">Search by title or author</label>
+                <input id="q" name="q" type="text" th:value="${keyword}">
+            </div>
+
+            <div class="form-group">
+                <label for="categoryId">Filter by category</label>
+                <select id="categoryId" name="categoryId">
+                    <option value="">-- All categories --</option>
+                    <option th:each="category : ${categories}"
+                            th:value="${category.id}"
+                            th:text="${category.name}"
+                            th:selected="${selectedCategoryId != null and selectedCategoryId == category.id}">
+                        Programming
+                    </option>
+                </select>
+            </div>
+
+            <div class="actions">
+                <button class="btn" type="submit">Apply</button>
+                <a class="btn btn-secondary" th:href="@{/books}">Reset</a>
+            </div>
+        </form>
+    </div>
+
+    <div th:if="${#lists.isEmpty(books)}" class="info-box">
+        <p>No available books matched your search or filter.</p>
+    </div>
+
+    <table th:if="${!#lists.isEmpty(books)}" class="data-table">
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Category</th>
+            <th>Mode</th>
+            <th>Price</th>
+            <th>Seller</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="book : ${books}">
+            <td th:text="${book.title}">Clean Code</td>
+            <td th:text="${book.author}">Robert C. Martin</td>
+            <td th:text="${book.category.name}">Programming</td>
+            <td th:text="${book.listingMode}">SELL_ONLY</td>
+            <td th:text="${book.price != null ? book.price : '-'}">500.00</td>
+            <td th:text="${book.seller.fullName}">Seller One</td>
+            <td>
+                <a class="btn btn-link btn-small" th:href="@{/books/{id}(id=${book.id})}">View Details</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="pagination" th:if="${bookPage.totalPages > 1}">
+        <a class="btn btn-secondary btn-small"
+           th:if="${bookPage.hasPrevious()}"
+           th:href="@{/books(page=${bookPage.number - 1}, q=${keyword}, categoryId=${selectedCategoryId})}">
+            Previous
+        </a>
+
+        <span class="page-info">
+           Page <strong th:text="${bookPage.number + 1}">1</strong>
+           of
+           <strong th:text="${bookPage.totalPages}">1</strong>
+       </span>
+
+        <a class="btn btn-secondary btn-small"
+           th:if="${bookPage.hasNext()}"
+           th:href="@{/books(page=${bookPage.number + 1}, q=${keyword}, categoryId=${selectedCategoryId})}">
+            Next
+        </a>
+    </div>
+</div>
+</body>
+</html>

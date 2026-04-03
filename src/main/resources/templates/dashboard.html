@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - Book Exchange Platform</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<div class="container">
+    <h1>Dashboard</h1>
+
+    <p><strong>Logged in as:</strong> <span th:text="${currentUserEmail}">user@example.com</span></p>
+
+    <h2>Your roles</h2>
+    <ul>
+        <li th:each="role : ${roles}" th:text="${role}">ROLE_BUYER</li>
+    </ul>
+
+    <div class="actions">
+        <a class="btn btn-secondary" th:href="@{/}">Home</a>
+
+        <a class="btn"
+           th:if="${!#lists.contains(roles, 'ROLE_SELLER')}"
+           th:href="@{/seller-applications/apply}">
+            Apply to Become Seller
+        </a>
+
+        <a class="btn btn-link" th:href="@{/seller-applications/mine}">My Seller Applications</a>
+        <a class="btn btn-link" th:href="@{/requests/my}">My Book Requests</a>
+
+        <a class="btn"
+           th:if="${#lists.contains(roles, 'ROLE_SELLER')}"
+           th:href="@{/seller/books}">
+            Manage My Book Listings
+        </a>
+
+        <a class="btn btn-link"
+           th:if="${#lists.contains(roles, 'ROLE_SELLER')}"
+           th:href="@{/seller/requests}">
+            Incoming Book Requests
+        </a>
+
+        <a class="btn btn-link"
+           th:if="${#lists.contains(roles, 'ROLE_ADMIN')}"
+           th:href="@{/admin}">
+            Admin Area
+        </a>
+    </div>
+
+    <form class="logout-form" th:action="@{/logout}" method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+        <button class="btn" type="submit">Logout</button>
+    </form>
+</div>
+</body>
+</html>

@@ -45,5 +45,186 @@ A full-stack web application where users can browse books, request exchanges or 
 - all features use feature branches
 - changes go through pull requests with review
 
-## Project status
-Repository initialized. Implementation starts next.
+## Current implementation status
+Implemented so far:
+- Spring Boot project bootstrap
+- PostgreSQL running in Docker for local development
+- `User`, `Role`, `SellerApplication`, `Category`, `Book`, and `ExchangeRequest` entities
+- automatic seeding for roles and one admin user
+- buyer registration
+- login/logout
+- authenticated dashboard
+- admin-only protected page
+- seller application submission
+- admin approval/rejection for seller applications
+- admin category management
+- seller book listing management foundation
+- public book browsing
+- public book details page
+- public book search by title/author
+- public category filter
+- public book pagination
+- buyer request submission
+- seller request approval/rejection flow
+- buyer request history
+- initial service unit tests
+
+
+## Current local URLs
+- home: `http://localhost:9090/`
+- browse books: `http://localhost:9090/books`
+- book details: `http://localhost:9090/books/{id}`
+- create request: `http://localhost:9090/requests/create?bookId={id}`
+- my requests: `http://localhost:9090/requests/my`
+- incoming seller requests: `http://localhost:9090/seller/requests`
+- login: `http://localhost:9090/login`
+- register: `http://localhost:9090/register`
+- dashboard: `http://localhost:9090/dashboard`
+- admin: `http://localhost:9090/admin`
+- apply seller: `http://localhost:9090/seller-applications/apply`
+- my seller applications: `http://localhost:9090/seller-applications/mine`
+- admin seller approvals: `http://localhost:9090/admin/seller-applications`
+- admin categories: `http://localhost:9090/admin/categories`
+- seller books: `http://localhost:9090/seller/books`
+
+## Seeded admin account
+This account is created automatically on first startup if it does not already exist.
+
+Default local values:
+- email: `admin@bookexchange.local`
+- password: `Admin@12345`
+
+## Local development bootstrap
+
+### Start PostgreSQL in Docker
+```bash
+docker compose up -d postgres
+```
+## CI workflow
+
+GitHub Actions is configured to run the Maven build and tests on:
+- pull requests to `develop`
+- pull requests to `main`
+- pushes to `develop`
+- pushes to `main`
+
+Current CI job:
+- `build-and-test`
+
+This workflow uses:
+- Java 17
+- Maven wrapper (`./mvnw`)
+- dependency caching for Maven
+
+## REST API foundation
+
+Implemented REST controllers:
+- `BookRestController`
+- `CategoryRestController`
+- `ExchangeRequestRestController`
+
+Global REST error handling:
+- `GlobalRestExceptionHandler`
+
+### Example API endpoints
+
+#### Books
+- `GET /api/books`
+- `GET /api/books/{id}`
+- `GET /api/seller/books`
+- `POST /api/books`
+- `PUT /api/books/{id}`
+- `DELETE /api/books/{id}`
+
+#### Categories
+- `GET /api/categories`
+- `GET /api/categories/{id}`
+- `POST /api/categories`
+- `PUT /api/categories/{id}`
+- `DELETE /api/categories/{id}`
+
+#### Requests
+- `POST /api/requests`
+- `GET /api/requests/my`
+- `GET /api/seller/requests`
+- `PATCH /api/seller/requests/{id}/approve`
+- `PATCH /api/seller/requests/{id}/reject`
+
+## Testing status
+
+### Unit tests
+Service-layer unit tests are implemented for:
+- authentication
+- seller application flow
+- category management
+- book management
+- request flow
+
+### Integration tests
+MockMvc integration tests are implemented for:
+- public book REST controller
+- admin category REST controller
+- buyer request REST controller
+- seller request approval REST controller
+
+### Repository tests
+JPA repository tests are implemented for:
+- category repository
+- book repository
+
+### Current testing tools
+- JUnit 5
+- Mockito
+- Spring Boot Test
+- MockMvc
+- DataJpaTest
+- H2 test database
+
+## Dockerized run
+
+The project supports running the full application stack with Docker Compose.
+
+### Build and start app + PostgreSQL
+```bash
+docker compose up --build
+
+Run in background
+
+docker compose up --build -d
+
+Stop containers
+docker compose down
+Stop containers and remove database volume
+docker compose down -v
+```
+
+## Deployment on Render
+
+The application is deployed on Render as a Docker-based web service.
+
+### CI/CD flow
+- GitHub Actions runs service/unit tests first
+- if those pass, GitHub Actions runs repository and integration tests
+- if code is pushed to `main` and both test stages pass, GitHub Actions triggers a Render deploy hook
+- Render rebuilds and redeploys the application
+
+### Render services
+- Render Web Service for the Spring Boot application
+- Render PostgreSQL database for production data
+
+### Required Render environment variables
+Set these in the Render web service:
+- `DB_HOST`
+- `DB_PORT`
+- `DB_NAME`
+- `DB_USER`
+- `DB_PASSWORD`
+- `ADMIN_FULL_NAME`
+- `ADMIN_EMAIL`
+- `ADMIN_PASSWORD`
+
+The application also supports Render’s injected `PORT` variable automatically.
+
+### Public URL
+- Add the deployed Render URL here after first successful deployment.
+
