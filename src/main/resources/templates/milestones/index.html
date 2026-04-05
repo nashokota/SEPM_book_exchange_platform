@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Project Milestones | Book Exchange Platform')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: siteHeader('milestone')}"></div>
+
+<main class="main-content">
+    <div class="page-shell page-shell-wide">
+        <section class="page-banner">
+            <div>
+                <span class="eyebrow">Repository history</span>
+                <h1>Completed milestones</h1>
+                <p class="page-copy">
+                    This page reads the merged feature-branch history and turns it into a cleaner timeline of what the platform already ships.
+                </p>
+            </div>
+
+            <div class="page-banner-card">
+                <span class="stat-label">Milestones tracked</span>
+                <span class="summary-value" th:text="${#lists.size(milestones)}">0</span>
+                <p class="page-copy">Also available as JSON from <code>/api/milestones</code>.</p>
+            </div>
+        </section>
+
+        <section class="section-block">
+            <div class="timeline-grid">
+                <article class="timeline-card" th:each="milestone : ${milestones}">
+                    <div class="timeline-meta">
+                        <span th:text="${milestone.category}">Feature</span>
+                        <span>•</span>
+                        <span th:text="${@view.shortDate(milestone.mergedDate())}">Repository history</span>
+                    </div>
+                    <h3 th:text="${milestone.title}">Milestone title</h3>
+                    <p class="panel-copy" th:text="${milestone.branchLabel + ' branch'}">Feature branch</p>
+                    <div class="pill-group" style="margin-top: 14px;">
+                        <span class="tag" th:text="${milestone.branchName}">feature/name</span>
+                        <span class="tag" th:text="${'Commit ' + milestone.commitHash}">Commit abc123</span>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </div>
+</main>
+
+<div th:replace="~{fragments/layout :: siteFooter()}"></div>
+</body>
+</html>

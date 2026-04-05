@@ -1,43 +1,109 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title th:text="${book.title} + ' - Book Exchange Platform'">Book Details</title>
-    <link rel="stylesheet" th:href="@{/css/main.css}">
-</head>
+<head th:replace="~{fragments/layout :: head(${book.title} + ' | Book Exchange Platform')}"></head>
 <body>
-<div class="container">
-    <h1 th:text="${book.title}">Book Title</h1>
+<div th:replace="~{fragments/layout :: siteHeader('books')}"></div>
 
-    <div class="info-box">
-        <p><strong>Author:</strong> <span th:text="${book.author}">Author Name</span></p>
-        <p><strong>Category:</strong> <span th:text="${book.category.name}">Programming</span></p>
-        <p><strong>Condition:</strong> <span th:text="${book.condition}">GOOD</span></p>
-        <p><strong>Listing mode:</strong> <span th:text="${book.listingMode}">SELL_ONLY</span></p>
-        <p><strong>Availability:</strong> <span th:text="${book.availabilityStatus}">AVAILABLE</span></p>
-        <p><strong>Price:</strong> <span th:text="${book.price != null ? book.price : '-'}">500.00</span></p>
-        <p><strong>Seller:</strong> <span th:text="${book.seller.fullName}">Seller One</span></p>
-        <p th:if="${book.isbn != null}"><strong>ISBN:</strong> <span th:text="${book.isbn}">1234567890</span></p>
-        <p th:if="${book.exchangePreference != null}">
-            <strong>Exchange preference:</strong>
-            <span th:text="${book.exchangePreference}">Looking for database books</span>
-        </p>
-        <p th:if="${book.imageUrl != null}">
-            <strong>Image URL:</strong>
-            <span th:text="${book.imageUrl}">https://example.com/image.jpg</span>
-        </p>
-        <p th:if="${book.description != null}">
-            <strong>Description:</strong>
-            <span th:text="${book.description}">Book description</span>
-        </p>
-    </div>
+<main class="main-content">
+    <div class="page-shell page-shell-wide">
+        <div class="breadcrumbs">
+            <a th:href="@{/}">Home</a>
+            <span>/</span>
+            <a th:href="@{/books}">Browse books</a>
+            <span>/</span>
+            <span th:text="${book.title}">Book title</span>
+        </div>
 
-    <div class="actions">
-        <a class="btn" th:href="@{/requests/create(bookId=${book.id})}">Request This Book</a>
-        <a class="btn btn-secondary" th:href="@{/books}">Back to Browse</a>
-        <a class="btn btn-link" th:href="@{/login}">Login</a>
-        <a class="btn" th:href="@{/register}">Register</a>
+        <section class="detail-layout">
+            <aside class="detail-sidebar">
+                <div class="detail-image-panel">
+                    <div class="detail-image">
+                        <img th:if="${book.imageUrl != null}" th:src="${book.imageUrl}" th:alt="${book.title}">
+                        <div class="book-placeholder" th:if="${book.imageUrl == null}" th:text="${@view.initials(book.title)}">BX</div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <span class="eyebrow">Request this listing</span>
+                    <div class="detail-price" th:text="${@view.price(book.price)}">BDT 0</div>
+                    <p class="page-copy">
+                        Request this book as a purchase or propose an exchange after reviewing the full listing below.
+                    </p>
+                    <div class="actions">
+                        <a class="btn" th:if="${isAuthenticated}" th:href="@{/requests/create(bookId=${book.id})}">
+                            Request This Book
+                        </a>
+                        <a class="btn" th:if="${!isAuthenticated}" th:href="@{/login}">
+                            Log In to Request
+                        </a>
+                        <a class="btn btn-secondary" th:href="@{/books}">Back to Browse</a>
+                    </div>
+                </div>
+            </aside>
+
+            <div class="detail-main">
+                <section class="panel">
+                    <div class="pill-group">
+                        <span class="detail-tag" th:text="${book.category.name}">Category</span>
+                        <span class="detail-tag" th:text="${@view.label(book.condition)}">Condition</span>
+                        <span class="detail-tag" th:text="${@view.label(book.listingMode)}">Listing mode</span>
+                        <span class="detail-tag" th:text="${@view.label(book.availabilityStatus)}">Availability</span>
+                    </div>
+
+                    <div style="margin-top: 16px;">
+                        <h1 th:text="${book.title}">Book Title</h1>
+                        <p class="subtext" th:text="${'by ' + book.author}">by Author Name</p>
+                    </div>
+
+                    <div class="detail-meta-grid" style="margin-top: 18px;">
+                        <div class="meta-item">
+                            <span class="meta-label">Seller</span>
+                            <div th:text="${book.seller.fullName}">Seller name</div>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Category</span>
+                            <div th:text="${book.category.name}">Programming</div>
+                        </div>
+                        <div class="meta-item" th:if="${book.isbn != null}">
+                            <span class="meta-label">ISBN</span>
+                            <div th:text="${book.isbn}">1234567890</div>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Listing mode</span>
+                            <div th:text="${@view.label(book.listingMode)}">Exchange only</div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="panel" th:if="${book.description != null}">
+                    <span class="eyebrow">Description</span>
+                    <h2>Listing details</h2>
+                    <p class="page-copy" th:text="${book.description}">Book description</p>
+                </section>
+
+                <section class="panel" th:if="${book.exchangePreference != null}">
+                    <span class="eyebrow">Exchange notes</span>
+                    <h2>What the seller is looking for</h2>
+                    <p class="page-copy" th:text="${book.exchangePreference}">Exchange preference</p>
+                </section>
+
+                <section class="panel">
+                    <span class="eyebrow">Explore more</span>
+                    <h2>Browse more categories</h2>
+                    <div class="pill-group" style="margin-top: 14px;">
+                        <a class="pill-link"
+                           th:each="category : ${categories}"
+                           th:href="@{/books(categoryId=${category.id})}"
+                           th:text="${category.name}">
+                            Category
+                        </a>
+                    </div>
+                </section>
+            </div>
+        </section>
     </div>
-</div>
+</main>
+
+<div th:replace="~{fragments/layout :: siteFooter()}"></div>
 </body>
 </html>

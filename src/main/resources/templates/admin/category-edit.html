@@ -1,34 +1,43 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-   <meta charset="UTF-8">
-   <title>Edit Category - Book Exchange Platform</title>
-   <link rel="stylesheet" th:href="@{/css/main.css}">
-</head>
+<head th:replace="~{fragments/layout :: head('Edit Category | Book Exchange Platform')}"></head>
 <body>
-<div class="container form-container">
-   <h1>Edit Category</h1>
+<div th:replace="~{fragments/layout :: siteHeader('admin')}"></div>
 
-   <form th:action="@{/admin/categories/{id}/edit(id=${categoryId})}" th:object="${categoryRequest}" method="post">
-       <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+<main class="main-content">
+    <div class="page-shell page-shell-narrow">
+        <section class="panel form-container">
+            <div class="panel-head">
+                <div>
+                    <span class="eyebrow">Admin categories</span>
+                    <h1>Edit category</h1>
+                </div>
+            </div>
 
-       <div class="form-group">
-           <label for="name">Category name</label>
-           <input id="name" type="text" th:field="*{name}">
-           <div class="field-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
-       </div>
+            <form th:action="@{/admin/categories/{id}/edit(id=${categoryId})}" th:object="${categoryRequest}" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 
-       <div class="form-group">
-           <label for="description">Description (optional)</label>
-           <textarea id="description" th:field="*{description}" rows="3"></textarea>
-           <div class="field-error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
-       </div>
+                <div class="form-group">
+                    <label for="name">Category name</label>
+                    <input id="name" type="text" th:field="*{name}">
+                    <div class="field-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                </div>
 
-       <div class="actions">
-           <button class="btn" type="submit">Update Category</button>
-           <a class="btn btn-secondary" th:href="@{/admin/categories}">Cancel</a>
-       </div>
-   </form>
-</div>
+                <div class="form-group">
+                    <label for="description">Description (optional)</label>
+                    <textarea id="description" th:field="*{description}"></textarea>
+                    <div class="field-error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+                </div>
+
+                <div class="actions">
+                    <button class="btn" type="submit">Update Category</button>
+                    <a class="btn btn-secondary" th:href="@{/admin/categories}">Cancel</a>
+                </div>
+            </form>
+        </section>
+    </div>
+</main>
+
+<div th:replace="~{fragments/layout :: siteFooter()}"></div>
 </body>
 </html>

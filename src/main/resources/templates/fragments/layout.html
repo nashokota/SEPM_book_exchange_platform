@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${title}">Book Exchange Platform</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<header class="site-header-shell" th:fragment="siteHeader(activePage)">
+    <div class="announcement-bar">
+        <div class="announcement-inner page-shell page-shell-wide">
+            <span>Trade books smarter with one shared catalog, cleaner requests, and clearer seller workflows.</span>
+            <span>Designed for browsing, buying, and exchanging without the usual clutter.</span>
+        </div>
+    </div>
+
+    <div class="page-shell page-shell-wide">
+        <div class="site-header">
+            <a class="brand" th:href="@{/}">
+                <span class="brand-mark">BX</span>
+                <span class="brand-copy">
+                    <span class="brand-title">Book Exchange</span>
+                    <span class="brand-subtitle">Second-hand books with a calmer browsing experience</span>
+                </span>
+            </a>
+
+            <nav class="nav-links" aria-label="Primary navigation">
+                <a class="nav-link"
+                   th:classappend="${activePage == 'home'} ? ' is-active' : ''"
+                   th:href="@{/}">
+                    Home
+                </a>
+                <a class="nav-link"
+                   th:classappend="${activePage == 'books'} ? ' is-active' : ''"
+                   th:href="@{/books}">
+                    Browse Books
+                </a>
+                <a class="nav-link"
+                   th:if="${isSeller}"
+                   th:classappend="${activePage == 'seller'} ? ' is-active' : ''"
+                   th:href="@{/seller/books}">
+                    Sell Books
+                </a>
+                <a class="nav-link"
+                   th:if="${isAdmin}"
+                   th:classappend="${activePage == 'admin'} ? ' is-active' : ''"
+                   th:href="@{/admin}">
+                    Admin
+                </a>
+            </nav>
+
+            <div class="nav-actions">
+                <span class="profile-pill" th:if="${isAuthenticated}" th:text="${currentUserName}">Reader</span>
+
+                <a class="btn btn-ghost" th:if="${!isAuthenticated}" th:href="@{/login}">
+                    Log In
+                </a>
+                <a class="btn" th:if="${!isAuthenticated}" th:href="@{/register}">
+                    Create Account
+                </a>
+
+                <a class="btn btn-secondary" th:if="${isAuthenticated}" th:href="@{/dashboard}">
+                    Dashboard
+                </a>
+
+                <form class="header-logout" th:if="${isAuthenticated}" th:action="@{/logout}" method="post">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                    <button class="btn btn-ghost" type="submit">Log Out</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div th:fragment="flashMessages()">
+    <div class="message message-success" th:if="${successMessage}" th:text="${successMessage}"></div>
+    <div class="message message-error" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+</div>
+
+<footer class="site-footer" th:fragment="siteFooter()">
+    <div class="page-shell page-shell-wide">
+        <div class="site-footer-panel">
+            <div class="footer-column">
+                <div class="brand">
+                    <span class="brand-mark">BX</span>
+                    <span class="brand-copy">
+                        <span class="brand-title">Book Exchange</span>
+                        <span class="brand-subtitle">A semester-built platform for buyers, sellers, and admins.</span>
+                    </span>
+                </div>
+                <p class="footer-note">
+                    Browse public listings, request exchanges or purchases, and track progress from a single dashboard.
+                </p>
+            </div>
+
+            <div class="footer-column">
+                <div class="footer-heading">Explore</div>
+                <a th:href="@{/}">Homepage</a>
+                <a th:href="@{/books}">Browse books</a>
+            </div>
+
+            <div class="footer-column">
+                <div class="footer-heading">Account</div>
+                <a th:if="${!isAuthenticated}" th:href="@{/login}">Log in</a>
+                <a th:if="${!isAuthenticated}" th:href="@{/register}">Create buyer account</a>
+                <a th:if="${isAuthenticated}" th:href="@{/dashboard}">Dashboard</a>
+                <a th:if="${isAuthenticated}" th:href="@{/requests/my}">My requests</a>
+                <a th:if="${isAuthenticated and isSeller}" th:href="@{/seller/books}">My listings</a>
+            </div>
+
+            <div class="footer-column">
+                <div class="footer-heading">Project</div>
+                <span class="footer-note">Spring Boot</span>
+                <span class="footer-note">Thymeleaf</span>
+                <span class="footer-note">PostgreSQL</span>
+                <span class="footer-note">SEPM Lab</span>
+            </div>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

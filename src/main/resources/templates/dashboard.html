@@ -1,56 +1,88 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Dashboard - Book Exchange Platform</title>
-    <link rel="stylesheet" th:href="@{/css/main.css}">
-</head>
+<head th:replace="~{fragments/layout :: head('Dashboard | Book Exchange Platform')}"></head>
 <body>
-<div class="container">
-    <h1>Dashboard</h1>
+<div th:replace="~{fragments/layout :: siteHeader('dashboard')}"></div>
 
-    <p><strong>Logged in as:</strong> <span th:text="${currentUserEmail}">user@example.com</span></p>
+<main class="main-content">
+    <div class="page-shell page-shell-wide">
+        <section class="page-banner">
+            <div>
+                <span class="eyebrow">Dashboard</span>
+                <h1>Your account hub</h1>
+                <p class="page-copy">
+                    Open the part of the platform that fits your role, from browsing and requests to listings and admin review work.
+                </p>
+            </div>
 
-    <h2>Your roles</h2>
-    <ul>
-        <li th:each="role : ${roles}" th:text="${role}">ROLE_BUYER</li>
-    </ul>
+            <div class="page-banner-card">
+                <span class="stat-label">Signed in as</span>
+                <span class="summary-value" th:text="${currentUserName}">User</span>
+                <p class="page-copy" th:text="${currentUserEmail}">user@example.com</p>
+            </div>
+        </section>
 
-    <div class="actions">
-        <a class="btn btn-secondary" th:href="@{/}">Home</a>
+        <section class="section-block">
+            <div class="panel">
+                <div class="panel-head">
+                    <div>
+                        <span class="eyebrow">Roles</span>
+                        <h2>What you can do right now</h2>
+                    </div>
+                </div>
 
-        <a class="btn"
-           th:if="${!#lists.contains(roles, 'ROLE_SELLER')}"
-           th:href="@{/seller-applications/apply}">
-            Apply to Become Seller
-        </a>
+                <div class="pill-group">
+                    <span class="tag" th:each="role : ${roles}" th:text="${role}">ROLE_BUYER</span>
+                </div>
+            </div>
+        </section>
 
-        <a class="btn btn-link" th:href="@{/seller-applications/mine}">My Seller Applications</a>
-        <a class="btn btn-link" th:href="@{/requests/my}">My Book Requests</a>
+        <section class="section-block">
+            <div class="dashboard-grid">
+                <article class="action-card">
+                    <span class="eyebrow">Reader tools</span>
+                    <h3>Browse and request books</h3>
+                    <p class="panel-copy">Move between the public catalog and your request history without extra navigation clutter.</p>
+                    <div class="actions">
+                        <a class="btn" th:href="@{/books}">Browse Books</a>
+                        <a class="btn btn-secondary" th:href="@{/requests/my}">My Requests</a>
+                    </div>
+                </article>
 
-        <a class="btn"
-           th:if="${#lists.contains(roles, 'ROLE_SELLER')}"
-           th:href="@{/seller/books}">
-            Manage My Book Listings
-        </a>
+                <article class="action-card" th:if="${!#lists.contains(roles, 'ROLE_SELLER')}">
+                    <span class="eyebrow">Seller access</span>
+                    <h3>Apply to become a seller</h3>
+                    <p class="panel-copy">Submit an application, then track the review status from the same account.</p>
+                    <div class="actions">
+                        <a class="btn" th:href="@{/seller-applications/apply}">Apply Now</a>
+                        <a class="btn btn-secondary" th:href="@{/seller-applications/mine}">My Applications</a>
+                    </div>
+                </article>
 
-        <a class="btn btn-link"
-           th:if="${#lists.contains(roles, 'ROLE_SELLER')}"
-           th:href="@{/seller/requests}">
-            Incoming Book Requests
-        </a>
+                <article class="action-card" th:if="${#lists.contains(roles, 'ROLE_SELLER')}">
+                    <span class="eyebrow">Seller workspace</span>
+                    <h3>Manage listings and incoming requests</h3>
+                    <p class="panel-copy">Keep your books current and respond to buyers without switching between disconnected pages.</p>
+                    <div class="actions">
+                        <a class="btn" th:href="@{/seller/books}">My Listings</a>
+                        <a class="btn btn-secondary" th:href="@{/seller/requests}">Incoming Requests</a>
+                    </div>
+                </article>
 
-        <a class="btn btn-link"
-           th:if="${#lists.contains(roles, 'ROLE_ADMIN')}"
-           th:href="@{/admin}">
-            Admin Area
-        </a>
+                <article class="action-card" th:if="${#lists.contains(roles, 'ROLE_ADMIN')}">
+                    <span class="eyebrow">Admin tools</span>
+                    <h3>Review the platform workflow</h3>
+                    <p class="panel-copy">Approve sellers, maintain categories, and keep core management flows tidy from the admin area.</p>
+                    <div class="actions">
+                        <a class="btn" th:href="@{/admin}">Admin Area</a>
+                        <a class="btn btn-secondary" th:href="@{/admin/categories}">Categories</a>
+                    </div>
+                </article>
+            </div>
+        </section>
     </div>
+</main>
 
-    <form class="logout-form" th:action="@{/logout}" method="post">
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-        <button class="btn" type="submit">Logout</button>
-    </form>
-</div>
+<div th:replace="~{fragments/layout :: siteFooter()}"></div>
 </body>
 </html>
