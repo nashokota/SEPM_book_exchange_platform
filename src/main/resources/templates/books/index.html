@@ -1,99 +1,172 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Browse Books - Book Exchange Platform</title>
-    <link rel="stylesheet" th:href="@{/css/main.css}">
-</head>
+<head th:replace="~{fragments/layout :: head('Browse Books | Book Exchange Platform')}"></head>
 <body>
-<div class="container">
-    <h1>Available Books</h1>
+<div th:replace="~{fragments/layout :: siteHeader('books')}"></div>
 
-    <div class="actions">
-        <a class="btn btn-secondary" th:href="@{/}">Home</a>
-        <a class="btn btn-link" th:href="@{/login}">Login</a>
-        <a class="btn" th:href="@{/register}">Register</a>
-    </div>
-
-    <div class="info-box">
-        <h2>Search and Filter</h2>
-
-        <form th:action="@{/books}" method="get">
-            <div class="form-group">
-                <label for="q">Search by title or author</label>
-                <input id="q" name="q" type="text" th:value="${keyword}">
+<main class="main-content">
+    <div class="page-shell page-shell-wide">
+        <section class="page-banner">
+            <div>
+                <span class="eyebrow">Public catalog</span>
+                <h1>Browse available books</h1>
+                <p class="page-copy">
+                    Search by title or author, move through categories, and open detail pages before you request a listing.
+                </p>
             </div>
 
-            <div class="form-group">
-                <label for="categoryId">Filter by category</label>
-                <select id="categoryId" name="categoryId">
-                    <option value="">-- All categories --</option>
-                    <option th:each="category : ${categories}"
-                            th:value="${category.id}"
-                            th:text="${category.name}"
-                            th:selected="${selectedCategoryId != null and selectedCategoryId == category.id}">
-                        Programming
-                    </option>
-                </select>
+            <div class="page-banner-card">
+                <span class="stat-label">Available listings</span>
+                <span class="summary-value" th:text="${availableBooksCount}">0</span>
+                <p class="page-copy">Updated from the public catalog.</p>
             </div>
+        </section>
 
-            <div class="actions">
-                <button class="btn" type="submit">Apply</button>
-                <a class="btn btn-secondary" th:href="@{/books}">Reset</a>
-            </div>
-        </form>
+        <div class="catalog-layout">
+            <aside class="catalog-sidebar">
+                <div class="sticky-panel">
+                    <span class="eyebrow">Categories</span>
+                    <h2>Browse by shelf</h2>
+                    <div class="category-list">
+                        <a class="category-link"
+                           th:classappend="${selectedCategoryId == null} ? ' is-active' : ''"
+                           th:href="@{/books(q=${keyword})}">
+                            <span>All categories</span>
+                        </a>
+
+                        <a class="category-link"
+                           th:each="category : ${categories}"
+                           th:classappend="${selectedCategoryId != null and selectedCategoryId == category.id} ? ' is-active' : ''"
+                           th:href="@{/books(categoryId=${category.id}, q=${keyword})}">
+                            <span th:text="${category.name}">Category name</span>
+                        </a>
+                    </div>
+                </div>
+            </aside>
+
+            <section class="catalog-main">
+                <div class="panel">
+                    <div class="panel-head">
+                        <div>
+                            <span class="eyebrow">Search and filter</span>
+                            <h2>Refine the catalog</h2>
+                        </div>
+                    </div>
+
+                    <form th:action="@{/books}" method="get">
+                        <div class="search-grid">
+                            <input id="q" name="q" type="text" th:value="${keyword}" placeholder="Search by title or author">
+
+                            <select id="categoryId" name="categoryId">
+                                <option value="">All categories</option>
+                                <option th:each="category : ${categories}"
+                                        th:value="${category.id}"
+                                        th:text="${category.name}"
+                                        th:selected="${selectedCategoryId != null and selectedCategoryId == category.id}">
+                                    Programming
+                                </option>
+                            </select>
+
+                            <button class="btn" type="submit">Apply Filters</button>
+                            <a class="btn btn-secondary" th:href="@{/books}">Reset</a>
+                        </div>
+                    </form>
+                </div>
+
+                <div th:if="${#lists.isEmpty(books)}" class="empty-state panel">
+                    <h3>No books matched this search</h3>
+                    <p>Try a different author, remove a category filter, or reset the search to see the full public catalog.</p>
+                </div>
+
+                <div class="book-list" th:if="${!#lists.isEmpty(books)}">
+                    <article class="book-card" th:each="book : ${books}">
+                        <div class="book-card-media">
+                            <div class="book-cover">
+                                <img th:if="${book.imageUrl != null}" th:src="${book.imageUrl}" th:alt="${book.title}">
+                                <div class="book-placeholder" th:if="${book.imageUrl == null}" th:text="${@view.initials(book.title)}">BX</div>
+                            </div>
+                        </div>
+
+                        <div class="book-card-content">
+                            <div class="pill-group">
+                                <span class="tag" th:text="${book.category.name}">Category</span>
+                                <span class="tag" th:text="${@view.label(book.condition)}">Condition</span>
+                                <span class="tag" th:text="${@view.label(book.listingMode)}">Listing mode</span>
+                            </div>
+
+                            <div>
+                                <h2 th:text="${book.title}">Book Title</h2>
+                                <p class="muted-text" th:text="${'by ' + book.author}">by Author Name</p>
+                            </div>
+
+                            <div class="book-card-meta">
+                                <div class="meta-item">
+                                    <span class="meta-label">Seller</span>
+                                    <div th:text="${book.seller.fullName}">Seller name</div>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-label">Availability</span>
+                                    <div th:text="${@view.label(book.availabilityStatus)}">Available</div>
+                                </div>
+                                <div class="meta-item" th:if="${book.isbn != null}">
+                                    <span class="meta-label">ISBN</span>
+                                    <div th:text="${book.isbn}">1234567890</div>
+                                </div>
+                                <div class="meta-item" th:if="${book.isbn == null}">
+                                    <span class="meta-label">Book type</span>
+                                    <div>General listing</div>
+                                </div>
+                            </div>
+
+                            <p class="page-copy"
+                               th:text="${book.description != null ? book.description : (book.exchangePreference != null ? book.exchangePreference : 'Open the detail page for the full listing description and exchange notes.')}">
+                                Open the detail page for the full listing description and exchange notes.
+                            </p>
+                        </div>
+
+                        <div class="book-card-actions">
+                            <div>
+                                <span class="meta-label">Price</span>
+                                <div class="detail-price" th:text="${@view.price(book.price)}">BDT 0</div>
+                            </div>
+
+                            <div class="actions">
+                                <a class="btn btn-secondary" th:href="@{/books/{id}(id=${book.id})}">View Details</a>
+                                <a class="btn" th:if="${isAuthenticated}" th:href="@{/requests/create(bookId=${book.id})}">
+                                    Request Book
+                                </a>
+                                <a class="btn" th:if="${!isAuthenticated}" th:href="@{/login}">
+                                    Log In to Request
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="pagination" th:if="${bookPage.totalPages > 1}">
+                    <a class="btn btn-secondary btn-small"
+                       th:if="${bookPage.hasPrevious()}"
+                       th:href="@{/books(page=${bookPage.number - 1}, q=${keyword}, categoryId=${selectedCategoryId})}">
+                        Previous
+                    </a>
+
+                    <span class="page-info">
+                        Page <strong th:text="${bookPage.number + 1}">1</strong>
+                        of
+                        <strong th:text="${bookPage.totalPages}">1</strong>
+                    </span>
+
+                    <a class="btn btn-secondary btn-small"
+                       th:if="${bookPage.hasNext()}"
+                       th:href="@{/books(page=${bookPage.number + 1}, q=${keyword}, categoryId=${selectedCategoryId})}">
+                        Next
+                    </a>
+                </div>
+            </section>
+        </div>
     </div>
+</main>
 
-    <div th:if="${#lists.isEmpty(books)}" class="info-box">
-        <p>No available books matched your search or filter.</p>
-    </div>
-
-    <table th:if="${!#lists.isEmpty(books)}" class="data-table">
-        <thead>
-        <tr>
-            <th>Title</th>
-            <th>Author</th>
-            <th>Category</th>
-            <th>Mode</th>
-            <th>Price</th>
-            <th>Seller</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="book : ${books}">
-            <td th:text="${book.title}">Clean Code</td>
-            <td th:text="${book.author}">Robert C. Martin</td>
-            <td th:text="${book.category.name}">Programming</td>
-            <td th:text="${book.listingMode}">SELL_ONLY</td>
-            <td th:text="${book.price != null ? book.price : '-'}">500.00</td>
-            <td th:text="${book.seller.fullName}">Seller One</td>
-            <td>
-                <a class="btn btn-link btn-small" th:href="@{/books/{id}(id=${book.id})}">View Details</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-
-    <div class="pagination" th:if="${bookPage.totalPages > 1}">
-        <a class="btn btn-secondary btn-small"
-           th:if="${bookPage.hasPrevious()}"
-           th:href="@{/books(page=${bookPage.number - 1}, q=${keyword}, categoryId=${selectedCategoryId})}">
-            Previous
-        </a>
-
-        <span class="page-info">
-           Page <strong th:text="${bookPage.number + 1}">1</strong>
-           of
-           <strong th:text="${bookPage.totalPages}">1</strong>
-       </span>
-
-        <a class="btn btn-secondary btn-small"
-           th:if="${bookPage.hasNext()}"
-           th:href="@{/books(page=${bookPage.number + 1}, q=${keyword}, categoryId=${selectedCategoryId})}">
-            Next
-        </a>
-    </div>
-</div>
+<div th:replace="~{fragments/layout :: siteFooter()}"></div>
 </body>
 </html>

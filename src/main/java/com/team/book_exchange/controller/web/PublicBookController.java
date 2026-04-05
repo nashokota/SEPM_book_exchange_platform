@@ -33,6 +33,7 @@ public class PublicBookController {
         model.addAttribute("categories", categoryService.getAllCategories());
         model.addAttribute("keyword", keyword);
         model.addAttribute("selectedCategoryId", categoryId);
+        model.addAttribute("availableBooksCount", bookPage.getTotalElements());
 
         return "books/index";
     }
@@ -40,6 +41,7 @@ public class PublicBookController {
     @GetMapping("/books/{bookId}")
     public String showBookDetails(@PathVariable Long bookId, Model model) {
         model.addAttribute("book", bookService.getPublicAvailableBook(bookId));
+        model.addAttribute("categories", categoryService.getAllCategories());
         return "books/details";
     }
 }

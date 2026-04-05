@@ -1,50 +1,72 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>My Requests - Book Exchange Platform</title>
-    <link rel="stylesheet" th:href="@{/css/main.css}">
-</head>
+<head th:replace="~{fragments/layout :: head('My Requests | Book Exchange Platform')}"></head>
 <body>
-<div class="container">
-    <h1>My Book Requests</h1>
+<div th:replace="~{fragments/layout :: siteHeader('requests')}"></div>
 
-    <div class="message message-success" th:if="${successMessage}" th:text="${successMessage}"></div>
-    <div class="message message-error" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+<main class="main-content">
+    <div class="page-shell page-shell-wide">
+        <div th:replace="~{fragments/layout :: flashMessages()}"></div>
 
-    <div class="actions">
-        <a class="btn btn-secondary" th:href="@{/dashboard}">Back to Dashboard</a>
-        <a class="btn btn-link" th:href="@{/books}">Browse Books</a>
+        <section class="page-banner">
+            <div>
+                <span class="eyebrow">Buyer requests</span>
+                <h1>Your submitted requests</h1>
+                <p class="page-copy">Track status, revisit the offered book details you sent, and keep follow-up messages in one place.</p>
+            </div>
+
+            <div class="page-banner-card">
+                <span class="stat-label">Requests</span>
+                <span class="summary-value" th:text="${#lists.size(requests)}">0</span>
+                <p class="page-copy">Includes both purchase and exchange requests.</p>
+            </div>
+        </section>
+
+        <div class="actions" style="margin-bottom: 18px;">
+            <a class="btn" th:href="@{/books}">Browse Books</a>
+            <a class="btn btn-secondary" th:href="@{/dashboard}">Back to Dashboard</a>
+        </div>
+
+        <div th:if="${#lists.isEmpty(requests)}" class="empty-state panel">
+            <h3>No requests yet</h3>
+            <p>Browse the public catalog and request a book when you are ready.</p>
+        </div>
+
+        <div class="table-wrapper panel" th:if="${!#lists.isEmpty(requests)}">
+            <table class="data-table">
+                <thead>
+                <tr>
+                    <th>Book</th>
+                    <th>Seller</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Offered Book</th>
+                    <th>Submitted</th>
+                    <th>Seller Remarks</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="requestItem : ${requests}">
+                    <td th:text="${requestItem.book.title}">Clean Code</td>
+                    <td th:text="${requestItem.seller.fullName}">Seller One</td>
+                    <td th:text="${@view.label(requestItem.requestType)}">Buy</td>
+                    <td>
+                        <span class="badge"
+                              th:classappend="| badge-${#strings.toLowerCase(requestItem.status.name())}|"
+                              th:text="${@view.label(requestItem.status)}">
+                            Pending
+                        </span>
+                    </td>
+                    <td th:text="${requestItem.offeredBookTitle != null ? requestItem.offeredBookTitle : '-'}">Book X</td>
+                    <td th:text="${@view.shortDateTime(requestItem.createdAt)}">Apr 5, 2026</td>
+                    <td th:text="${requestItem.sellerResponseRemarks != null ? requestItem.sellerResponseRemarks : '-'}">Looks good</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
+</main>
 
-    <div th:if="${#lists.isEmpty(requests)}" class="info-box">
-        <p>You have not submitted any requests yet.</p>
-    </div>
-
-    <table th:if="${!#lists.isEmpty(requests)}" class="data-table">
-        <thead>
-        <tr>
-            <th>Book</th>
-            <th>Seller</th>
-            <th>Type</th>
-            <th>Status</th>
-            <th>Offered Book</th>
-            <th>Submitted</th>
-            <th>Seller Remarks</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="requestItem : ${requests}">
-            <td th:text="${requestItem.book.title}">Clean Code</td>
-            <td th:text="${requestItem.seller.fullName}">Seller One</td>
-            <td th:text="${requestItem.requestType}">BUY</td>
-            <td th:text="${requestItem.status}">PENDING</td>
-            <td th:text="${requestItem.offeredBookTitle != null ? requestItem.offeredBookTitle : '-'}">Book X</td>
-            <td th:text="${requestItem.createdAt}">2026-04-02T12:00</td>
-            <td th:text="${requestItem.sellerResponseRemarks != null ? requestItem.sellerResponseRemarks : '-'}">Looks good</td>
-        </tr>
-        </tbody>
-    </table>
-</div>
+<div th:replace="~{fragments/layout :: siteFooter()}"></div>
 </body>
 </html>
