@@ -1,55 +1,81 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Manage Seller Applications - Book Exchange Platform</title>
-    <link rel="stylesheet" th:href="@{/css/main.css}">
-</head>
+<head th:replace="~{fragments/layout :: head('Seller Applications | Book Exchange Platform')}"></head>
 <body>
-<div class="container">
-    <h1>Manage Seller Applications</h1>
+<div th:replace="~{fragments/layout :: siteHeader('admin')}"></div>
 
-    <div class="message message-success" th:if="${successMessage}" th:text="${successMessage}"></div>
-    <div class="message message-error" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+<main class="main-content">
+    <div class="page-shell page-shell-wide">
+        <div th:replace="~{fragments/layout :: flashMessages()}"></div>
 
-    <div th:if="${#lists.isEmpty(applications)}" class="info-box">
-        <p>No pending seller applications right now.</p>
-    </div>
-
-    <div th:each="_application : ${applications}" class="application-card">
-        <h2>
-            <span th:text="${_application.user.fullName}">Buyer Name</span>
-            <span class="badge badge-pending" th:text="${_application.status}">PENDING</span>
-        </h2>
-
-        <p><strong>Email:</strong> <span th:text="${_application.user.email}">user@example.com</span></p>
-        <p><strong>Pickup location:</strong> <span th:text="${_application.pickupLocation}">Khulna</span></p>
-        <p><strong>Reason:</strong> <span th:text="${_application.reason}">I want to sell books.</span></p>
-        <p><strong>Submitted at:</strong> <span th:text="${_application.createdAt}">2026-04-02T12:00</span></p>
-
-        <form th:action="@{/admin/seller-applications/{id}/approve(id=${_application.id})}" method="post">
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-
-            <div class="form-group">
-                <label th:for="'remarks-' + ${_application.id}">Admin remarks (optional)</label>
-                <textarea th:id="'remarks-' + ${_application.id}" name="adminRemarks" rows="3"></textarea>
+        <section class="page-banner">
+            <div>
+                <span class="eyebrow">Seller approvals</span>
+                <h1>Review pending applications</h1>
+                <p class="page-copy">Approve strong applications, leave context in remarks, and keep seller onboarding moving cleanly.</p>
             </div>
 
-            <div class="actions">
-                <button class="btn" type="submit">Approve</button>
-                <button class="btn btn-danger"
-                        type="submit"
-                        th:formaction="@{/admin/seller-applications/{id}/reject(id=${_application.id})}">
-                    Reject
-                </button>
+            <div class="page-banner-card">
+                <span class="stat-label">Pending now</span>
+                <span class="summary-value" th:text="${#lists.size(applications)}">0</span>
+                <p class="page-copy">Only pending applications are shown here.</p>
             </div>
-        </form>
-    </div>
+        </section>
 
-    <div class="actions">
-        <a class="btn btn-secondary" th:href="@{/admin}">Back to Admin</a>
-        <a class="btn btn-link" th:href="@{/dashboard}">Dashboard</a>
+        <div th:if="${#lists.isEmpty(applications)}" class="empty-state panel">
+            <h3>No pending seller applications</h3>
+            <p>When new applications arrive, they will appear here for approval or rejection.</p>
+        </div>
+
+        <div class="book-list" th:if="${!#lists.isEmpty(applications)}">
+            <article class="application-card panel" th:each="_application : ${applications}">
+                <div class="panel-head">
+                    <div>
+                        <span class="eyebrow">Application</span>
+                        <h2 th:text="${_application.user.fullName}">Buyer Name</h2>
+                        <p class="page-copy" th:text="${_application.user.email}">user@example.com</p>
+                    </div>
+                    <span class="badge badge-pending" th:text="${@view.label(_application.status)}">Pending</span>
+                </div>
+
+                <div class="detail-meta-grid">
+                    <div class="meta-item">
+                        <span class="meta-label">Pickup location</span>
+                        <div th:text="${_application.pickupLocation}">Khulna</div>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Submitted</span>
+                        <div th:text="${@view.shortDateTime(_application.createdAt)}">Apr 5, 2026</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 18px;">
+                    <span class="meta-label">Reason</span>
+                    <p class="page-copy" th:text="${_application.reason}">I want to sell books.</p>
+                </div>
+
+                <form style="margin-top: 18px;" th:action="@{/admin/seller-applications/{id}/approve(id=${_application.id})}" method="post">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+                    <div class="form-group">
+                        <label th:for="'remarks-' + ${_application.id}">Admin remarks (optional)</label>
+                        <textarea th:id="'remarks-' + ${_application.id}" name="adminRemarks"></textarea>
+                    </div>
+
+                    <div class="actions">
+                        <button class="btn" type="submit">Approve</button>
+                        <button class="btn btn-danger"
+                                type="submit"
+                                th:formaction="@{/admin/seller-applications/{id}/reject(id=${_application.id})}">
+                            Reject
+                        </button>
+                    </div>
+                </form>
+            </article>
+        </div>
     </div>
-</div>
+</main>
+
+<div th:replace="~{fragments/layout :: siteFooter()}"></div>
 </body>
 </html>

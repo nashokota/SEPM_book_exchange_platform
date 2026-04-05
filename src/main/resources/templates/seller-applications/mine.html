@@ -1,50 +1,73 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>My Seller Applications - Book Exchange Platform</title>
-    <link rel="stylesheet" th:href="@{/css/main.css}">
-</head>
+<head th:replace="~{fragments/layout :: head('My Seller Applications | Book Exchange Platform')}"></head>
 <body>
-<div class="container">
-    <h1>My Seller Applications</h1>
+<div th:replace="~{fragments/layout :: siteHeader('seller')}"></div>
 
-    <div class="message message-success" th:if="${successMessage}" th:text="${successMessage}"></div>
-    <div class="message message-error" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+<main class="main-content">
+    <div class="page-shell page-shell-wide">
+        <div th:replace="~{fragments/layout :: flashMessages()}"></div>
 
-    <div class="actions">
-        <a class="btn"
-           th:if="${canApply}"
-           th:href="@{/seller-applications/apply}">
-            Submit New Seller Application
-        </a>
-        <a class="btn btn-secondary" th:href="@{/dashboard}">Back to Dashboard</a>
-        <a class="btn btn-link" th:href="@{/}">Home</a>
+        <section class="page-banner">
+            <div>
+                <span class="eyebrow">Seller applications</span>
+                <h1>Your application history</h1>
+                <p class="page-copy">Review approval status, see admin remarks, and submit a new application when the workflow allows it.</p>
+            </div>
+
+            <div class="page-banner-card">
+                <span class="stat-label">Applications</span>
+                <span class="summary-value" th:text="${#lists.size(applications)}">0</span>
+                <div class="actions" style="justify-content: center; margin-top: 12px;">
+                    <a class="btn btn-small" th:if="${canApply}" th:href="@{/seller-applications/apply}">New Application</a>
+                </div>
+            </div>
+        </section>
+
+        <div th:if="${#lists.isEmpty(applications)}" class="empty-state panel">
+            <h3>No seller applications yet</h3>
+            <p>Submit an application when you are ready to list books on the platform.</p>
+        </div>
+
+        <div class="book-list" th:if="${!#lists.isEmpty(applications)}">
+            <article class="application-card panel" th:each="_application : ${applications}">
+                <div class="panel-head">
+                    <div>
+                        <span class="eyebrow">Seller application</span>
+                        <h2 th:text="${@view.label(_application.status)}">Pending</h2>
+                    </div>
+                    <span class="badge"
+                          th:classappend="| badge-${#strings.toLowerCase(_application.status.name())}|"
+                          th:text="${@view.label(_application.status)}">
+                        Pending
+                    </span>
+                </div>
+
+                <div class="detail-meta-grid">
+                    <div class="meta-item">
+                        <span class="meta-label">Pickup location</span>
+                        <div th:text="${_application.pickupLocation}">Khulna</div>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Submitted</span>
+                        <div th:text="${@view.shortDateTime(_application.createdAt)}">Apr 5, 2026</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 18px;">
+                    <span class="meta-label">Reason</span>
+                    <p class="page-copy" th:text="${_application.reason}">I want to sell books.</p>
+                </div>
+
+                <div style="margin-top: 18px;" th:if="${_application.adminRemarks != null}">
+                    <span class="meta-label">Admin remarks</span>
+                    <p class="page-copy" th:text="${_application.adminRemarks}">Looks good.</p>
+                </div>
+            </article>
+        </div>
     </div>
+</main>
 
-    <div th:if="${#lists.isEmpty(applications)}" class="info-box">
-        <p>You have not submitted any seller applications yet.</p>
-    </div>
-
-    <div th:each="_application : ${applications}" class="application-card">
-        <h2>
-            Seller Application
-            <span class="badge"
-                  th:classappend="| badge-${#strings.toLowerCase(_application.status.name())}|"
-                  th:text="${_application.status}">
-                PENDING
-            </span>
-        </h2>
-
-        <p><strong>Pickup location:</strong> <span th:text="${_application.pickupLocation}">Khulna</span></p>
-        <p><strong>Reason:</strong> <span th:text="${_application.reason}">I want to sell books.</span></p>
-        <p><strong>Submitted at:</strong> <span th:text="${_application.createdAt}">2026-04-02T12:00</span></p>
-
-        <p th:if="${_application.adminRemarks != null}">
-            <strong>Admin remarks:</strong>
-            <span th:text="${_application.adminRemarks}">Looks good.</span>
-        </p>
-    </div>
-</div>
+<div th:replace="~{fragments/layout :: siteFooter()}"></div>
 </body>
 </html>

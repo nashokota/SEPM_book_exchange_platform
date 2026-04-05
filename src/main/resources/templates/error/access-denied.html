@@ -1,19 +1,23 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-   <meta charset="UTF-8">
-   <title>Access Denied - Book Exchange Platform</title>
-   <link rel="stylesheet" th:href="@{/css/main.css}">
-</head>
+<head th:replace="~{fragments/layout :: head('Access Denied | Book Exchange Platform')}"></head>
 <body>
-<div class="container">
-   <h1>Access Denied</h1>
-   <p>You are logged in, but your account does not have permission to open this page.</p>
+<div th:replace="~{fragments/layout :: siteHeader('access')}"></div>
 
-   <div class="actions">
-       <a class="btn btn-secondary" th:href="@{/dashboard}">Back to Dashboard</a>
-       <a class="btn btn-link" th:href="@{/}">Home</a>
-   </div>
-</div>
+<main class="main-content">
+    <div class="page-shell page-shell-narrow">
+        <section class="panel">
+            <span class="eyebrow">Permission required</span>
+            <h1>Access denied</h1>
+            <p class="page-copy">You are signed in, but this account does not have permission to open the page you requested.</p>
+            <div class="actions" style="margin-top: 18px;">
+                <a class="btn" th:href="@{/dashboard}">Back to Dashboard</a>
+                <a class="btn btn-secondary" th:href="@{/}">Go Home</a>
+            </div>
+        </section>
+    </div>
+</main>
+
+<div th:replace="~{fragments/layout :: siteFooter()}"></div>
 </body>
 </html>

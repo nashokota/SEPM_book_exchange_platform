@@ -23,7 +23,19 @@ public class SecurityConfig {
        http
                .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
                .authorizeHttpRequests(auth -> auth
-                       .requestMatchers("/", "/login", "/register", "/access-denied", "/books", "/books/**", "/css/**", "/js/**", "/images/**").permitAll()
+                       .requestMatchers(
+                               "/",
+                               "/login",
+                               "/register",
+                               "/access-denied",
+                               "/books",
+                               "/books/**",
+                               "/milestones",
+                               "/api/milestones",
+                               "/css/**",
+                               "/js/**",
+                               "/images/**"
+                       ).permitAll()
 
                        .requestMatchers(HttpMethod.GET, "/api/books", "/api/books/**").permitAll()
                        .requestMatchers(HttpMethod.GET, "/api/categories", "/api/categories/**").permitAll()
