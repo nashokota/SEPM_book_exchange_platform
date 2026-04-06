@@ -1,178 +1,213 @@
 # Book Exchange Platform
 
-Semester project for **Software Engineering and Project Management Lab**.
+Live URL: https://sepm-book-exchange-platform.onrender.com/
 
-## Project summary
-A full-stack web application where users can browse books, request exchanges or purchases, and apply to become sellers. Admins manage seller approvals, categories, and platform moderation.
+## Overview
 
-## Planned tech stack
+Book Exchange Platform is a full-stack web application for browsing books, managing seller listings, and handling buy or exchange requests between users. The platform supports separate flows for guests, buyers, sellers, and admins.
+
+## Screenshots
+
+### Home Page
+
+![Home Page](docs/screenshots/homepage.png)
+
+### Registration
+
+![Registration](docs/screenshots/registration.png)
+
+### Browse Books
+
+![Browse Books](docs/screenshots/browse_books.png)
+
+### Seller View
+
+![Seller View](docs/screenshots/seller_view.png)
+
+### Books by Seller
+
+![Books by Seller](docs/screenshots/books_by_seller.png)
+
+## Core Features
+
+### Guest
+- Browse available books
+- View book details
+- Search books by title or author
+- Filter books by category
+- Navigate paginated results
+- Register and log in
+
+### Buyer
+- Create account and log in
+- View personal dashboard
+- Submit buy or exchange requests for available books
+- View personal request history
+- Apply to become a seller
+- View seller application history
+
+### Seller
+- Create, edit, and delete book listings
+- Set listing mode as `EXCHANGE_ONLY`, `SELL_ONLY`, or `BOTH`
+- Mark listing availability
+- View incoming requests
+- Approve or reject requests
+
+### Admin
+- Review seller applications
+- Approve or reject seller applications
+- Manage categories
+
+## Roles and Access Control
+
+The platform uses Spring Security with role-based access control.
+
+- `ROLE_BUYER` is assigned to newly registered users
+- `ROLE_SELLER` is granted after seller approval
+- `ROLE_ADMIN` is used for platform administration
+
+Security includes:
+- BCrypt password encoding
+- Custom login/logout flow
+- Protected admin and seller routes
+- Protected REST API write endpoints
+
+## Tech Stack
+
 - Java 17
 - Spring Boot
-- Thymeleaf
+- Spring MVC
+- Spring Data JPA
 - Spring Security
+- Thymeleaf
 - PostgreSQL
-- Docker
+- Maven
+- Docker and Docker Compose
 - GitHub Actions
 - Render
+- JUnit 5, Mockito, MockMvc, DataJpaTest, H2
 
-## Planned roles
-- Admin
-- Buyer
-- Seller
+## Project Structure
 
-## Planned core features
-- User registration and login
-- Role-based authorization
-- Seller application and admin approval
-- Book listing management
-- Search and filter books
-- Exchange/purchase request workflow
-- REST API for key operations
-- Dockerized setup
+```text
+src/main/java/com/team/book_exchange/
+├── config/
+├── controller/
+│   ├── api/
+│   └── web/
+├── dto/
+│   ├── api/
+│   ├── auth/
+│   ├── book/
+│   ├── category/
+│   ├── request/
+│   └── seller/
+├── entity/
+├── enums/
+├── exception/
+├── repository/
+├── security/
+├── service/
+│   └── impl/
+└── BookExchangeApplication.java
+```
+
+## Main Modules
+
+- Authentication and registration
+- Seller application and approval flow
+- Category management
+- Seller book listing management
+- Public book browsing, search, filtering, and pagination
+- Buyer request submission and tracking
+- Seller approval or rejection of requests
+- REST API for books, categories, and requests
 - CI/CD and cloud deployment
 
-## Planned documentation
-- ER diagram
-- Architecture diagram
-- API endpoint documentation
-- Local run instructions
-- Docker instructions
-- CI/CD explanation
+## Diagrams
 
-## Team workflow
-- `main` is protected
-- active development happens through `develop`
-- all features use feature branches
-- changes go through pull requests with review
+### Architecture Diagram
 
-## Current implementation status
-Implemented so far:
-- Spring Boot project bootstrap
-- PostgreSQL running in Docker for local development
-- `User`, `Role`, `SellerApplication`, `Category`, `Book`, and `ExchangeRequest` entities
-- automatic seeding for roles and one admin user
-- buyer registration
-- login/logout
-- authenticated dashboard
-- admin-only protected page
-- seller application submission
-- admin approval/rejection for seller applications
-- admin category management
-- seller book listing management foundation
-- public book browsing
-- public book details page
-- public book search by title/author
-- public category filter
-- public book pagination
-- buyer request submission
-- seller request approval/rejection flow
-- buyer request history
-- initial service unit tests
+![Architecture Diagram](docs/architecture_diagram.png)
 
+### ER Diagram
 
-## Current local URLs
-- home: `http://localhost:9090/`
-- browse books: `http://localhost:9090/books`
-- book details: `http://localhost:9090/books/{id}`
-- create request: `http://localhost:9090/requests/create?bookId={id}`
-- my requests: `http://localhost:9090/requests/my`
-- incoming seller requests: `http://localhost:9090/seller/requests`
-- login: `http://localhost:9090/login`
-- register: `http://localhost:9090/register`
-- dashboard: `http://localhost:9090/dashboard`
-- admin: `http://localhost:9090/admin`
-- apply seller: `http://localhost:9090/seller-applications/apply`
-- my seller applications: `http://localhost:9090/seller-applications/mine`
-- admin seller approvals: `http://localhost:9090/admin/seller-applications`
-- admin categories: `http://localhost:9090/admin/categories`
-- seller books: `http://localhost:9090/seller/books`
+![ER Diagram](docs/er_diagram.png)
 
-## Seeded admin account
-This account is created automatically on first startup if it does not already exist.
+Current main entities:
+- `User`
+- `Role`
+- `SellerApplication`
+- `Category`
+- `Book`
+- `ExchangeRequest`
 
-Default local values:
-- email: `admin@bookexchange.local`
-- password: `Admin@12345`
+Key relationships:
+- `User` ↔ `Role` = many-to-many
+- `User` → `SellerApplication` = one-to-many
+- `User` → `Book` = one-to-many as seller
+- `Category` → `Book` = one-to-many
+- `Book` → `ExchangeRequest` = one-to-many
+- `User` → `ExchangeRequest` = one-to-many as buyer and as seller
 
-## Local development bootstrap
+## Documentation
 
-### Start PostgreSQL in Docker
+- [API Notes](docs/api_notes.md)
+- [Deployment Notes](docs/deployment.md)
+- [Final Report (PDF)](docs/report/Book_Exchange_Project_Report.pdf)
+
+## Local Run
+
+### Prerequisites
+- Java 17
+- Docker and Docker Compose
+
+### Start PostgreSQL
+
 ```bash
 docker compose up -d postgres
 ```
-## CI workflow
 
-GitHub Actions is configured to run the Maven build and tests on:
-- pull requests to `develop`
-- pull requests to `main`
-- pushes to `develop`
-- pushes to `main`
+### Run the application
 
-Current CI job:
-- `build-and-test`
+Debian / Git Bash:
 
-This workflow uses:
-- Java 17
-- Maven wrapper (`./mvnw`)
-- dependency caching for Maven
+```bash
+./mvnw spring-boot:run
+```
 
-## REST API foundation
+Windows CMD:
 
-Implemented REST controllers:
-- `BookRestController`
-- `CategoryRestController`
-- `ExchangeRequestRestController`
+```cmd
+mvnw.cmd spring-boot:run
+```
 
-Global REST error handling:
-- `GlobalRestExceptionHandler`
+Windows PowerShell:
 
-### Example API endpoints
+```powershell
+.\mvnw.cmd spring-boot:run
+```
 
-#### Books
-- `GET /api/books`
-- `GET /api/books/{id}`
-- `GET /api/seller/books`
-- `POST /api/books`
-- `PUT /api/books/{id}`
-- `DELETE /api/books/{id}`
+### Local URLs
 
-#### Categories
-- `GET /api/categories`
-- `GET /api/categories/{id}`
-- `POST /api/categories`
-- `PUT /api/categories/{id}`
-- `DELETE /api/categories/{id}`
+- Home: `http://localhost:9090/`
+- Browse books: `http://localhost:9090/books`
+- Login: `http://localhost:9090/login`
+- Register: `http://localhost:9090/register`
+- Dashboard: `http://localhost:9090/dashboard`
+- Admin area: `http://localhost:9090/admin`
+- Seller books: `http://localhost:9090/seller/books`
+- My requests: `http://localhost:9090/requests/my`
+- Seller incoming requests: `http://localhost:9090/seller/requests`
 
-#### Requests
-- `POST /api/requests`
-- `GET /api/requests/my`
-- `GET /api/seller/requests`
-- `PATCH /api/seller/requests/{id}/approve`
-- `PATCH /api/seller/requests/{id}/reject`
+## Testing
 
-## Testing status
+### Test Types
+- Service unit tests
+- Repository tests
+- Controller integration tests
 
-### Unit tests
-Service-layer unit tests are implemented for:
-- authentication
-- seller application flow
-- category management
-- book management
-- request flow
-
-### Integration tests
-MockMvc integration tests are implemented for:
-- public book REST controller
-- admin category REST controller
-- buyer request REST controller
-- seller request approval REST controller
-
-### Repository tests
-JPA repository tests are implemented for:
-- category repository
-- book repository
-
-### Current testing tools
+### Test Tools
 - JUnit 5
 - Mockito
 - Spring Boot Test
@@ -180,51 +215,58 @@ JPA repository tests are implemented for:
 - DataJpaTest
 - H2 test database
 
-## Dockerized run
+### Run tests
 
-The project supports running the full application stack with Docker Compose.
+Unit tests:
 
-### Build and start app + PostgreSQL
 ```bash
-docker compose up --build
-
-Run in background
-
-docker compose up --build -d
-
-Stop containers
-docker compose down
-Stop containers and remove database volume
-docker compose down -v
+./mvnw test
 ```
 
-## Deployment on Render
+Repository and integration tests:
 
-The application is deployed on Render as a Docker-based web service.
+```bash
+./mvnw -Dskip.unit.tests=true verify
+```
 
-### CI/CD flow
-- GitHub Actions runs service/unit tests first
-- if those pass, GitHub Actions runs repository and integration tests
-- if code is pushed to `main` and both test stages pass, GitHub Actions triggers a Render deploy hook
-- Render rebuilds and redeploys the application
+Full verification:
 
-### Render services
-- Render Web Service for the Spring Boot application
-- Render PostgreSQL database for production data
+```bash
+./mvnw verify
+```
 
-### Required Render environment variables
-Set these in the Render web service:
-- `DB_HOST`
-- `DB_PORT`
-- `DB_NAME`
-- `DB_USER`
-- `DB_PASSWORD`
-- `ADMIN_FULL_NAME`
-- `ADMIN_EMAIL`
-- `ADMIN_PASSWORD`
+## REST API
 
-The application also supports Render’s injected `PORT` variable automatically.
+The project includes REST controllers for:
+- Books
+- Categories
+- Exchange requests
 
-### Public URL
-- Add the deployed Render URL here after first successful deployment.
+For endpoint details, request/response examples, and access rules, see:
+- [API Notes](docs/api_notes.md)
 
+## CI/CD
+
+GitHub Actions is configured to:
+- run service and unit tests first
+- run repository and integration tests after that
+- trigger deployment from `main` after the test stages pass
+
+### Branch Strategy
+- `main` for release-ready code
+- `develop` for active integration
+- `feature/*` for feature branches
+
+
+### Admin Area
+
+![Admin Area](docs/screenshots/admin_area.png)
+
+## Future Improvements
+
+- image upload instead of only image URL
+- admin moderation of listings
+- JWT authentication for API
+- notifications
+- better dashboard analytics
+- more advanced search and sorting
